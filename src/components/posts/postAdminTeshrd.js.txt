@@ -1,0 +1,66 @@
+import React from 'react'
+import { useForm } from "react-hook-form";
+
+
+
+function Post   () {
+
+    // if (typeof window !== 'undefined'){
+    //     userNiceName = localStorage.getItem('userNiceName') 
+    //     token = localStorage.getItem('userToken')
+    //  }
+
+    const { register, handleSubmit, watch, errors } = useForm();     
+    const onSubmit = data => {
+        // let formData= {
+        //     'title': 'data.title',
+        //     'content' : 'data.content',
+        //     'status': 'publish'
+        // }
+
+    const   token = localStorage.getItem('userToken')
+        const  formData= (
+        {
+            "title": "nouveau titre deux",
+            "content": "typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown"
+        }
+        )
+        //console.log(typeof(formData))
+
+        const fetchData = async () => {
+            const result = await fetch('https://teshrd.tk/wp-json/wp/v2/posts/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify( formData)
+                })
+            .then(res => res.json())
+            console.log(result)
+            return result
+        }
+         fetchData();
+
+
+
+ 
+
+
+    
+}
+    return (
+        <>
+        <h1>New Post Admin</h1>
+        <form onSubmit={handleSubmit(onSubmit)}>
+        {/* <input name="title"  ref={register} /> */}
+        <textarea name="content" ref={register({ required: true })} />
+        {errors.content && <span>This field is required</span>}
+        <input type="submit" />
+        </form>
+
+        </>
+    )
+}
+
+export default Post

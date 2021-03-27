@@ -1,0 +1,104 @@
+import React from 'react'
+import Box from '@material-ui/core/Box'
+import Img from "gatsby-image"
+import {  useStaticQuery, graphql } from "gatsby"
+import { useForm } from "react-hook-form";
+import Pricing from '../components/pricing/price';
+
+// const email = localStorage.getItem('userEmail');  
+// const userNiceName = localStorage.getItem('userNiceName')
+// const token = localStorage.getItem('userToken')
+
+let  email , userNicename , token 
+
+function Form  (k) {
+
+const { register, handleSubmit, watch, errors } = useForm();  
+const  commentaires =  useStaticQuery( graphql`
+{
+    com :   allWpComment {
+            nodes {
+                id
+                date
+                content
+            }
+        }
+    ima :   allWpProduct {
+            nodes{
+                id
+                databaseId
+                name
+                sku
+                reviewCount
+            }
+    }
+}
+`)
+
+    // console.log(typeof(k.pageContext.k.databaseId));
+    console.log(commentaires)
+    
+const onSubmit = data => {
+    if (typeof window !== 'undefined'){
+        email = localStorage.getItem('userEmail');  
+        userNicename = localStorage.getItem('userNicename')
+        token = localStorage.getItem('userToken')
+    }
+
+    let formData= {
+        post:  k.pageContext.k.databaseId,
+        author_email: email,
+        author_name: userNicename,
+        date : new Date(),
+        content : data.content,
+        // status: 'publish',  
+    }
+    console.log(formData)
+    const fetchData = async () => {
+        const result = await fetch(`https://portaildemo69.000webhostapp.com/wp-json/wp/v2/comments/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify( formData)
+            })
+        .then(res => res.json())
+        return result
+    }
+     fetchData();
+  }
+  
+
+    return (
+
+      <Box m={10}>
+        {/* {console.log(k.pageContext.k)} */}
+        <h1>Laisser un commentaire ......... {k.pageContext.name}</h1>
+        <p>{k.pageContext.reviewCount}</p>
+
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+        <input name="nickName"  ref={register} />
+        <textarea name="content" ref={register({ required: true })} />
+        {errors.content && <span>This field is required</span>}
+        {/* {(token && username) !== null &&(<input type="submit" />)} */}
+        <input type="submit" />   
+        </form>  
+
+      </Box>
+    )
+}
+
+export default (k)=>{
+    return(
+        <>
+        <Form />
+        <Pricing  
+        title = {k.pageContext.name}
+        image = {k.pageContext.k.image.guid} 
+        description = {k.pageContext.k.image.slug}  
+        />
+        </>
+    )
+}
