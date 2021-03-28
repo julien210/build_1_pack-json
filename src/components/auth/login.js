@@ -15,7 +15,7 @@ const Goto_Posts = ()=>{
 const onSubmit =  (data) => {
 
    async  function fetchData  () {
-      const  result = await fetch('http://10.0.0.2/wordpress/wp-json/jwt-auth/v1/token', {
+      const  result = await fetch('https://portaildemo69.000webhostapp.com/wp-json/jwt-auth/v1/token', {
                             
             method: 'POST',
             headers: {
