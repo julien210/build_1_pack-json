@@ -38,7 +38,7 @@ function Post   () {
         //}
         const fetchData = async () => {   
             console.log(token)
-            const result = await fetch('http://localhost/wordpress/wp-json/wp/v2/posts/', {
+            const result = await fetch('https://portaildemo69.000webhostapp.com/wp-json//wp/v2/posts/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
